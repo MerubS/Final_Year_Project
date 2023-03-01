@@ -19,6 +19,12 @@ import tracemalloc
 tracemalloc.start()
 load_dotenv()
 
+class NumpyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return json.JSONEncoder.default(self, obj)
+
 app = Flask(__name__)
 app.secret_key = 'random secret key!'
 socketio = SocketIO(app, cors_allowed_origins="*",async_mode='eventlet')
@@ -61,8 +67,14 @@ def register_user(payload):
     img.save('{}.jpg'.format(str(count)))
 
     if count == 29:
-        print("MODEL RESULT " , train_model())
-        socketio.stop()
+        encodings = train_model()
+        # print((encodings))
+        encodings = json.dumps(encodings, cls=NumpyEncoder)
+        # encodings = json.loads(encodings)     
+        print(encodings)
+        emit('ADD_User_Encodings' , (encodings))
+        # print("MODEL RESULT " , train_model())
+        # socketio.stop()
         print('All Done')
 
 # IDENTIFICATION

@@ -45,6 +45,8 @@ const CreateCandidate = async (req,res)=>{
     }
 }
 
+
+
 const SaveLogsOfCandidate = async (req , res)=>{
   const {body} = req;
   console.log("Body" , body)

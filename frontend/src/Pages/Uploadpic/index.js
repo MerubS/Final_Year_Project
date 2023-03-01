@@ -51,8 +51,6 @@ const Uploadpic = () => {
  
    const capture = async () => {
       
-     
- 
       for (let i = 0; i < 30 ; i++){
          
          let im = webcamRef.current.getScreenshot();
@@ -64,11 +62,18 @@ const Uploadpic = () => {
          
       }
 
+      // socket.disconnect();
+      // navigate('/test');
+
+   };
+
+
+   socket.on("ADD_User_Encodings", async(encodings) => {
+
+      console.log("ENCODINGS RECEIVED")
       socket.disconnect();
       navigate('/test');
-
-   }
-
+   });
 
 
    return (
