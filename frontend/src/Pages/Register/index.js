@@ -6,6 +6,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 
+
+
 const Register = () => {
     const navigate = useNavigate();
     const queryParams = new URLSearchParams(window.location.search);
