@@ -78,7 +78,7 @@ const Test = () => {
     autoConnect: false,
   });  
 
-  const sendData = async (data,test_state, gaze_data) => {
+  const sendData = async (data,test_state, gaze_data, face_encoding) => {
 
 
 
@@ -87,13 +87,14 @@ const Test = () => {
        id: candidate.cnic,
        data: data,
        message : test_state,
-       gaze_payload : gaze_data 
+       gaze_payload : gaze_data,
+       face_encoding: face_encoding
      });
 
    };
     
 
-   socket.on("SEND_LIVE_STREAM", async(identification_result , gaze_result , inference_result , message, gaze_data) => {
+   socket.on("SEND_LIVE_STREAM", async(identification_result , gaze_result , inference_result , message, gaze_data , face_encoding) => {
         // console.log("Result : ",result) 
         console.log(gaze_data);
         var invi = invigilance;
@@ -111,7 +112,7 @@ const Test = () => {
           socket.disconnect()
         }
 
-        await axios.post('http://localhost:5000/api/candidate/SaveCandidateLogs',{identification_result , gaze_result , inference_result}).then((response)=>{
+        await axios.post('/api/candidate/SaveCandidateLogs',{identification_result , gaze_result , inference_result}).then((response)=>{
             console.log(response.data.message);                         // get a message of stream ended then generate report
         })
         // console.log('ABCD')    
@@ -119,13 +120,18 @@ const Test = () => {
         im = im.substring(23, im.length);
         // socket.emit("identification" , picture)
         console.log("SAMMAM SAYS "+end.current); 
-        await sendData(im, end.current, gaze_data)
+        await sendData(im, end.current, gaze_data, face_encoding)
         
         // console.log(result1)
        });
 
       
   const startStream = async () => {
+
+    
+
+    const respons = await axios.get("/api/candidate/GetFaceEncoding", {params: {...candidate}});
+    console.log('Response : ' )
 
       let gaze_data = {
 			counter : 0,
@@ -141,6 +147,7 @@ const Test = () => {
 		  
 		} 
 
+  try {
     socket.connect();
     console.log('StartSTREAM : ', end)  
         let im = webcamRef.current.getScreenshot();
@@ -149,10 +156,14 @@ const Test = () => {
           data: im,
           id: candidate.cnic,
           message: end,                              // assign state
-          gaze_payload : gaze_data
+          gaze_payload: gaze_data,
+          face_encoding: respons.data.data[0].face_encodings
         })
-   
+  
+  } catch (error) {
+    console.log('Error : ' , error)  
   }
+      }
 
 //  /////////////////////////// Streaming
 

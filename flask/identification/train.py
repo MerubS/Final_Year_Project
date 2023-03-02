@@ -10,10 +10,12 @@ def train_model():
     print("Out : ",os.getcwd())
     while(1):
         print(os.getcwd())
-        if (os.getcwd().split('\\')[-1] != 'identification'):
+        if (os.getcwd().split('\\')[-1] != 'flask'):
             os.chdir('../')
         else:
-            break;    
+            os.chdir(os.path.join(os.getcwd() , 'identification'))
+            break;  
+       
     print("Out : ",os.getcwd())
 
 
@@ -51,6 +53,7 @@ def train_model():
     print('Data : ' , numpy.array(encodings).shape , numpy.array(names).shape)
     with open('face_enc', 'wb') as fp:
         pickle.dump(data, fp)
+    
+    os.chdir('../')
 
     return encodings
-

@@ -4,7 +4,7 @@ import { useRef, useEffect, useState } from "react";
 import socketio from "socket.io-client";
 import Webcam from 'react-webcam';
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
 
 
 ////////// UserID will come from node backend after SignUp of student
@@ -70,9 +70,16 @@ const Uploadpic = () => {
 
    socket.on("ADD_User_Encodings", async(encodings) => {
 
-      console.log("ENCODINGS RECEIVED")
+      console.log("ENCODINGS RECEIVED", candidate.cnic);
       socket.disconnect();
       navigate('/test');
+
+      let object = {
+         encodings : encodings ,
+         cnic : candidate.cnic,
+      } 
+      const respons = await axios.post("/api/candidate/SaveFaceEncoding", {...object} , {'Access-Control-Allow-Origin' : '*'});
+      console.log('Response : ' , respons);
    });
 
 

@@ -5,17 +5,16 @@ const {logger} = require("./../logger/createLog")
 // const winston = require("winston");
 
 const Saveface_encoding = async (req,res)=>{
-  let {encoding , cnic} = req.body;
-  console.log(encoding);
- 
-  if (encoding) {
+  let {encodings , cnic} = req.body;
+  
+  if (encodings) {
   try {
     sql.connect(sqlConfig)    
     .then(function () {
         console.log('CONNECTED');
         var req = new sql.Request();
         req.verbose = true;
-        req.input('enc', encoding)
+        req.input('enc', encodings)
         req.input('cid', cnic)
         req.execute("SaveFaceEncoding" , (err,result) => {
           if (err) {console.log(err)}

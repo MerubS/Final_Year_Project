@@ -27,7 +27,7 @@ class NumpyEncoder(json.JSONEncoder):
 
 app = Flask(__name__)
 app.secret_key = 'random secret key!'
-socketio = SocketIO(app, cors_allowed_origins="*",async_mode='eventlet')
+socketio = SocketIO(app, cors_allowed_origins="*",max_http_buffer_size=10 * 1024 * 1024,async_mode='eventlet')
 
 @app.route('/', methods=['GET'])
 def index():
@@ -82,6 +82,7 @@ def register_user(payload):
 def get_identification(payload):
 
     print(payload["gaze_payload"])
+    face_encoding = payload["face_encoding"]
     data = payload['data']
     id = payload['id']
     message = payload['message']
@@ -92,6 +93,7 @@ def get_identification(payload):
     print("KHIZPUR")
 
     print(payload['gaze_payload'])
+    asyncio.run(tracking.identify(np.array(img)))
     payload['gaze_payload'] = asyncio.run(tracking.main_func(np.array(img) , payload['gaze_payload']))
     asyncio.run(detect(np.array(img)))
     asyncio.run(perform_inference(img))
@@ -118,7 +120,7 @@ def get_identification(payload):
             f2.write('')
             f3.write('')
 
-    emit('SEND_LIVE_STREAM' , (identification_result , gaze_result , inference_result , message , payload['gaze_payload']))
+    emit('SEND_LIVE_STREAM' , (identification_result , gaze_result , inference_result , message , payload['gaze_payload'] , face_encoding))
 
 @socketio.on_error_default
 def default_error_handler(e):

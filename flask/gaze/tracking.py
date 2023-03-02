@@ -116,3 +116,8 @@ async def main_func(frame , gaze_payload):
     (gaze_payload['counter'] , gaze_payload['total_blinks'] , gaze_payload['closed_eyes_frame'] , gaze_payload['video_path'] , gaze_payload['frame_counter'] , gaze_payload['start_time'] , gaze_payload['fps'] , gaze_payload['right_movement'], gaze_payload['left_movement'], gaze_payload['no_movement']) = (COUNTER , TOTAL_BLINKS , CLOSED_EYES_FRAME , videoPath , FRAME_COUNTER , START_TIME , FPS , rightmovement,leftmovement,nomovement) 
 
     return gaze_payload
+
+
+async def identify(frame):
+    print(frame)
+    

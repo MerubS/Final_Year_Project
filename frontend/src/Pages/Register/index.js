@@ -33,7 +33,7 @@ const Register = () => {
          if (registerdata.city!=='' && registerdata.cnic!=='' && registerdata.contact!='' && registerdata.dob!='' && registerdata.email!=''
        && registerdata.gender!='' && registerdata.name!='') {
        try {
-          axios.post('http://localhost:5000/api/candidate/CreateCandidate',{registerdata, testdata}).then((response)=>{
+          axios.post('/api/candidate/CreateCandidate',{registerdata, testdata}).then((response)=>{
             console.log(response.data.message);
             if (response.data.message === 'Success') {
                 localStorage.setItem('Candidatedetails', JSON.stringify(registerdata));

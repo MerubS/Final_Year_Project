@@ -27,7 +27,6 @@ yarn-error.log*
 
 /flask/.vscode
 /flask/.env
-/flask/identification/images
 
 /frontend/node_modules
 /flask/yolo/yolov5
