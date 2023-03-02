@@ -12,7 +12,7 @@ import asyncio
 # from multiprocessing import Process
 import requests , json
 from dotenv import load_dotenv
-from identification.main import detect
+from identification.main import detect, identify
 from yolo.inference import perform_inference
 import tracemalloc
 
@@ -93,10 +93,10 @@ def get_identification(payload):
     print("KHIZPUR")
 
     print(payload['gaze_payload'])
-    asyncio.run(tracking.identify(np.array(img)))
+    identification_result = asyncio.run(identify(np.array(img) , face_encoding))
     payload['gaze_payload'] = asyncio.run(tracking.main_func(np.array(img) , payload['gaze_payload']))
-    asyncio.run(detect(np.array(img)))
-    asyncio.run(perform_inference(img))
+    # asyncio.run(detect(np.array(img)))
+    # asyncio.run(perform_inference(img))
 
     while(1):
         if (os.getcwd().split('\\')[-1] != 'flask'):
@@ -105,13 +105,10 @@ def get_identification(payload):
             break;   
 
     with open(os.path.join(os.getcwd() , 'identification' , 'test.txt')) as f1 , open(os.path.join(os.getcwd() , 'gaze' , 'test.txt')) as f2 , open(os.path.join(os.getcwd() , 'gaze' , 'test.txt')) as f3:
-        identification_result = f1.read()
+        # identification_result = f1.read()
         gaze_result = f2.read()
         inference_result = f3.read()
 
-    print(identification_result)
-    print(gaze_result)
-    print(inference_result)
     
     if message == 'TEST ENDED':
         message = 'ACKNOWLEDGE'

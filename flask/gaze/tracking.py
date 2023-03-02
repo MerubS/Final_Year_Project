@@ -118,6 +118,3 @@ async def main_func(frame , gaze_payload):
     return gaze_payload
 
 
-async def identify(frame):
-    print(frame)
-    

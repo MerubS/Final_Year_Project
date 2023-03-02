@@ -3,19 +3,17 @@ import face_recognition
 import pickle
 import cv2
 import os
-import numpy
+ 
 
 # name = input('Enter Name : ')
 def train_model():
     print("Out : ",os.getcwd())
     while(1):
         print(os.getcwd())
-        if (os.getcwd().split('\\')[-1] != 'flask'):
+        if (os.getcwd().split('\\')[-1] != 'identification'):
             os.chdir('../')
         else:
-            os.chdir(os.path.join(os.getcwd() , 'identification'))
-            break;  
-       
+            break;    
     print("Out : ",os.getcwd())
 
 
@@ -32,7 +30,7 @@ def train_model():
         names = data['name']
 
     for (i, imagePath) in enumerate(imagePaths):
-        print(imagePath)
+        
         image = cv2.imread(imagePath)
         rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
@@ -50,10 +48,9 @@ def train_model():
     
     data = {'encodings' : encodings, 'name' : names}
     # data[name] = encodings
-    print('Data : ' , numpy.array(encodings).shape , numpy.array(names).shape)
+
     with open('face_enc', 'wb') as fp:
         pickle.dump(data, fp)
-    
-    os.chdir('../')
 
-    return encodings
+    return img_encodings
+
