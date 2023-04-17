@@ -15,6 +15,8 @@ def count_condition(arr, condition):
     return count
 
 async def identify(fr , face_encoding):
+
+
     while(1):
         print(os.getcwd())
         if (os.getcwd().split('\\')[-1] != 'flask'):
@@ -43,20 +45,31 @@ async def identify(fr , face_encoding):
 
     rgb = cv2.cvtColor(fr, cv2.COLOR_BGR2RGB)
 
-    encodings = face_recognition.face_encodings(rgb)
-    face_encoding = json.loads(face_encoding)     
-    # print(np.array(face_encoding).shape , np.array(face_encoding))
-    # print((np.array(encodings)[0].shape) , np.array(encodings)[0])
+    encodings = face_recognition.face_encodings(rgb) # fr
+    face_encoding = json.loads(face_encoding)  # face_encodings
 
+    # print("abc" , np.array(encodings).shape)
+    if (np.array(encodings).shape)[0] == 0:
+        return False
+    # print((np.array(encodings)[0]) , np.array(encodings))
+    
+
+
+    # if np.array(encodings)[0] == 0:
+    #     print('hello')
+
+    # print(len(encodings))
     # result = _.map_(np.array(face_encoding), lambda r: r == np.array(encodings)[0])
     # print(result)
+
+    # print("Encodings :" , len(face_encoding))
 
     matches = 0
     for encoding in encodings:
         print('dsadadsasdaas')
         matches = face_recognition.compare_faces(face_encoding, encoding)
 
-        print(matches)
+        print("MATCHES : " , matches)
 
         # name = "Unknown"
         
