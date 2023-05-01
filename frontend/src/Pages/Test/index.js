@@ -78,12 +78,13 @@ const Test = () => {
     autoConnect: false,
   });  
 
-  const sendData = async (data,test_state, gaze_data, face_encoding) => {
+  const sendData = async (data,test_state, identification_data , gaze_data, face_encoding, ) => {
 
 
 
     console.log('send data : ', end)  
       socket.emit("identification", {
+       identification_payload: identification_data,
        id: candidate.cnic,
        data: data,
        message : test_state,
@@ -94,7 +95,7 @@ const Test = () => {
    };
     
 
-   socket.on("SEND_LIVE_STREAM", async(identification_result , gaze_result , inference_result , message, gaze_data , face_encoding) => {
+   socket.on("SEND_LIVE_STREAM", async(identification_result , identification_data, gaze_result , inference_result , message, gaze_data , face_encoding) => {
         // console.log("Result : ",result) 
         console.log(gaze_data);
         var invi = invigilance;
@@ -120,7 +121,7 @@ const Test = () => {
         im = im.substring(23, im.length);
         // socket.emit("identification" , picture)
         console.log("SAMMAM SAYS "+end.current); 
-        await sendData(im, end.current, gaze_data, face_encoding)
+        await sendData(im, end.current, identification_data ,gaze_data, face_encoding)
         
         // console.log(result1)
        });
@@ -144,8 +145,14 @@ const Test = () => {
 			left_movement : 0,
 			right_movement : 0,
 			no_movement : 0  
-		  
 		} 
+
+    let identification_payload = {
+      'total_snapshots' : 0,
+      'no_face' : 0,
+      'correct_face' : 0,
+      'wrong_face' : 0
+      }
 
   try {
     socket.connect();
@@ -153,6 +160,8 @@ const Test = () => {
         let im = webcamRef.current.getScreenshot();
         im = im.substring(23, im.length);
         socket.emit("identification" , {
+
+          identification_payload,
           data: im,
           id: candidate.cnic,
           message: end,                              // assign state

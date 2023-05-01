@@ -105,11 +105,11 @@ async def main_func(frame , gaze_payload):
     
     # camera.release()
 
-    with open("test.txt","w") as f:
-        totalmovement = leftmovement+rightmovement+nomovement
-        f.write(f"Left Movement = "+str(leftmovement) + "\nNo Movement = "+ str(nomovement)+"\nRight Movement = "+str(rightmovement)+"\n\nLeft Movement "+str(round((leftmovement/totalmovement)*100,2))+"%"\
-            +"\nNo Movement "+str(round((nomovement/totalmovement)*100,2))+"%"+"\nRight Movement "+str(round((rightmovement/totalmovement)*100,2))+"%")
-        f.close
+    # with open("test.txt","w") as f:
+    #     totalmovement = leftmovement+rightmovement+nomovement
+    #     f.write(f"Left Movement = "+str(leftmovement) + "\nNo Movement = "+ str(nomovement)+"\nRight Movement = "+str(rightmovement)+"\n\nLeft Movement "+str(round((leftmovement/totalmovement)*100,2))+"%"\
+    #         +"\nNo Movement "+str(round((nomovement/totalmovement)*100,2))+"%"+"\nRight Movement "+str(round((rightmovement/totalmovement)*100,2))+"%")
+    #     f.close
     cv.destroyAllWindows()
 
     

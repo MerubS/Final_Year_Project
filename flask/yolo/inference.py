@@ -1,6 +1,6 @@
 import os
 
-async def perform_inference(img):
+async def perform_inference(img , id):
 
     while(1):
         print(os.getcwd())
@@ -15,7 +15,7 @@ async def perform_inference(img):
     os.system("python yolov5/detect.py --weights yolov5s.pt --img 416 --conf 0.6 --source \"Inference\\1.jpg\" --device cpu")
 
 
-    objects = ["cell phone", "remote", "laptop", 'person']
+    objects = ["cell phone", "remote", "laptop", "person"]
 
     detections = []
     lines = []
@@ -23,7 +23,7 @@ async def perform_inference(img):
     with open("detections.txt", "r") as file:
         lines = [line.rstrip() for line in file]
     file.close()
-  
+    
     if len(lines) > 0:
 
         for obj in lines:
@@ -39,11 +39,11 @@ async def perform_inference(img):
                     detections.append(obj)
 
 
-    with open("results.txt", "r") as file:
+    with open(os.path.join("results" , f'{str(id)}.txt'), "r") as file:
         lines = [line.rstrip() for line in file]
     file.close()
 
-    with open("results.txt", "a") as file:
+    with open(os.path.join("results" , f'{str(id)}.txt'), "a") as file:
             for obj in detections:
                 if obj not in lines:
                     file.write(obj + '\n')

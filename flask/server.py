@@ -9,7 +9,7 @@ import cv2
 import numpy as np
 import io , os
 import asyncio
-# from multiprocessing import Process
+from multiprocessing import Process
 import requests , json
 from dotenv import load_dotenv
 from identification.main import detect, identify
@@ -82,6 +82,7 @@ def register_user(payload):
 def get_identification(payload):
 
     print(payload["gaze_payload"])
+    identification_payload = payload["identification_payload"]
     face_encoding = payload["face_encoding"]
     data = payload['data']
     id = payload['id']
@@ -93,10 +94,10 @@ def get_identification(payload):
     print("KHIZPUR")
 
     print(payload['gaze_payload'])
-    identification_result = asyncio.run(identify(np.array(img) , face_encoding))
+    payload["identification_payload"] = asyncio.run(identify(np.array(img) , face_encoding , payload['id'] , identification_payload))
     payload['gaze_payload'] = asyncio.run(tracking.main_func(np.array(img) , payload['gaze_payload']))
     # asyncio.run(detect(np.array(img)))
-    # asyncio.run(perform_inference(img))
+    asyncio.run(perform_inference(img , id))
 
     while(1):
         if (os.getcwd().split('\\')[-1] != 'flask'):
@@ -104,20 +105,41 @@ def get_identification(payload):
         else:
             break;   
 
-    with open(os.path.join(os.getcwd() , 'identification' , 'test.txt')) as f1 , open(os.path.join(os.getcwd() , 'gaze' , 'test.txt')) as f2 , open(os.path.join(os.getcwd() , 'gaze' , 'test.txt')) as f3:
-        # identification_result = f1.read()
-        gaze_result = f2.read()
-        inference_result = f3.read()
+    (rightmovement,leftmovement,nomovement) = (payload['gaze_payload']['right_movement'], payload['gaze_payload']['left_movement'], payload['gaze_payload']['no_movement'])
+    totalmovement = rightmovement+leftmovement+nomovement
+    gaze_result = "Left Movement = "+str(leftmovement) + "\nNo Movement = "+ str(nomovement)+"\nRight Movement = "+str(rightmovement)+"\n\nLeft Movement "+str(round((leftmovement/totalmovement)*100,2))+"%"\
+            +"\nNo Movement "+str(round((nomovement/totalmovement)*100,2))+"%"+"\nRight Movement "+str(round((rightmovement/totalmovement)*100,2))+"%"
+            # with open(os.path.join(os.getcwd() , 'identification' , 'face_results' , f'{str(id)}.txt') , 'w') as f1 , open(os.path.join(os.getcwd() , 'gaze' , 'gaze_results' , f'{str(id)}.txt') , 'w') as f2 , open(os.path.join(os.getcwd() , 'yolo' , 'results.txt') , 'w') as f3:
 
     
+    (total,no_face,correct_face,wrong_face) = (payload['identification_payload']['total_snapshots'], payload['identification_payload']['no_face'], payload['identification_payload']['correct_face'], payload['identification_payload']['wrong_face'])
+    identification_result = "Correct Face = "+str(correct_face) + "\nNo Face = "+ str(no_face)+"\nWrong Face = "+str(wrong_face)+"\n\Correct Face "+str(round((correct_face/total)*100,2))+"%"\
+        +"\nNo Face "+str(round((no_face/total)*100,2))+"%"+"\nWrong Face "+str(round((wrong_face/totalmovement)*100,2))+"%"
+    
+    with open(os.path.join(os.getcwd() , 'yolo' , 'results' , f'{str(id)}.txt') , 'r') as f:
+            inference_result = f.read()
+
     if message == 'TEST ENDED':
         message = 'ACKNOWLEDGE'
-        with open(os.path.join(os.getcwd() , 'identification' , 'test.txt') , 'w') as f1 , open(os.path.join(os.getcwd() , 'gaze' , 'test.txt') , 'w') as f2 , open(os.path.join(os.getcwd() , 'yolo' , 'results.txt') , 'w') as f3:
-            f1.write('')
-            f2.write('')
-            f3.write('')
+        # with open(os.path.join(os.getcwd() , 'identification' , 'test.txt') , 'w') as f1 , open(os.path.join(os.getcwd() , 'gaze' , 'test.txt') , 'w') as f2 , open(os.path.join(os.getcwd() , 'yolo' , 'results.txt') , 'w') as f3:
+        #     f1.write('')
+        #     f2.write('')
+        #     f3.write('')
+        
+        with open(os.path.join(os.getcwd() , 'gaze' , 'gaze_results' , f'{str(id)}.txt') , 'w') as f1:
+            (rightmovement,leftmovement,nomovement) = (payload['gaze_payload']['right_movement'], payload['gaze_payload']['left_movement'], payload['gaze_payload']['no_movement'])
+            totalmovement = rightmovement+leftmovement+nomovement
+            f1.write(f"Left Movement = "+str(leftmovement) + "\nNo Movement = "+ str(nomovement)+"\nRight Movement = "+str(rightmovement)+"\n\nLeft Movement "+str(round((leftmovement/totalmovement)*100,2))+"%"\
+            +"\nNo Movement "+str(round((nomovement/totalmovement)*100,2))+"%"+"\nRight Movement "+str(round((rightmovement/totalmovement)*100,2))+"%")
+        
+        with open(os.path.join(os.getcwd() ,'identification' , 'face_results' , f'{str(id)}.txt') , 'w') as f2:
+            (total,no_face,correct_face,wrong_face) = (payload['identification_payload']['total_snapshots'], payload['identification_payload']['no_face'], payload['identification_payload']['correct_face'], payload['identification_payload']['wrong_face'])
+            f2.write(f"Correct Face = "+str(correct_face) + "\nNo Face = "+ str(no_face)+"\nWrong Face = "+str(wrong_face)+"\n\Correct Face "+str(round((correct_face/total)*100,2))+"%"\
+            +"\nNo Face "+str(round((no_face/total)*100,2))+"%"+"\nWrong Face "+str(round((wrong_face/totalmovement)*100,2))+"%")
+                
+        
 
-    emit('SEND_LIVE_STREAM' , (identification_result , gaze_result , inference_result , message , payload['gaze_payload'] , face_encoding))
+    emit('SEND_LIVE_STREAM' , (identification_result, payload["identification_payload"]  , gaze_result , inference_result , message , payload['gaze_payload'] , face_encoding))
 
 @socketio.on_error_default
 def default_error_handler(e):

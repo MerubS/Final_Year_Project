@@ -14,8 +14,13 @@ def count_condition(arr, condition):
             count += 1
     return count
 
-async def identify(fr , face_encoding):
+async def identify(fr , face_encoding , id , identification_payload):
 
+    TOTAL_SNAPSHOTS = identification_payload['total_snapshots']
+    NO_FACE = identification_payload['no_face']
+    CORRECT_FACE = identification_payload['correct_face']
+    WRONG_FACE = identification_payload['wrong_face']
+    
 
     while(1):
         print(os.getcwd())
@@ -23,7 +28,10 @@ async def identify(fr , face_encoding):
             os.chdir('../')
         else:
             os.chdir(os.path.join(os.getcwd() , 'identification'))
-            break;      
+            break;  
+
+    TOTAL_SNAPSHOTS = TOTAL_SNAPSHOTS + 1
+
     print(os.getcwd())
     cascPathface = os.path.dirname(
     cv2.__file__) + "/data/haarcascade_frontalface_alt2.xml"
@@ -49,8 +57,16 @@ async def identify(fr , face_encoding):
     face_encoding = json.loads(face_encoding)  # face_encodings
 
     # print("abc" , np.array(encodings).shape)
+
     if (np.array(encodings).shape)[0] == 0:
-        return False
+        # with open(os.path.join(os.getcwd() , 'face_results' ,  f'{str(id)}.txt') , 'w') as f:
+        #     f.write("demo")
+        # return False # when there's no one on the screen.
+        NO_FACE = NO_FACE + 1 
+        print('b')
+        (identification_payload['total_snapshots'] , identification_payload['no_face'] , identification_payload['correct_face'] , identification_payload['wrong_face']) = (TOTAL_SNAPSHOTS , NO_FACE , CORRECT_FACE , WRONG_FACE)
+        return identification_payload
+        
     # print((np.array(encodings)[0]) , np.array(encodings))
     
 
@@ -90,8 +106,23 @@ async def identify(fr , face_encoding):
         # names.append(name)
 
     if count_condition(matches , lambda x: x == True) > len(matches)/2:
-        return True
-    return False
+        CORRECT_FACE = CORRECT_FACE + 1
+        print('a')
+        # with open("face_identification.txt") as f:
+        #     f.write('FACE VERIFIED')
+        #     f.close()
+        # return True # right shakal
+    else:
+        WRONG_FACE = WRONG_FACE + 1
+
+    # return False
+    # with open("face_identification.txt") as f:
+    #     f.write('FACE NOT VERIFIED')
+    #     f.close()
+    #return False # wrong shakal
+
+    (identification_payload['total_snapshots'] , identification_payload['no_face'] , identification_payload['correct_face'] , identification_payload['wrong_face']) = (TOTAL_SNAPSHOTS , NO_FACE , CORRECT_FACE , WRONG_FACE)
+    return identification_payload
     
 async def detect(fr):
 
