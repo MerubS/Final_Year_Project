@@ -144,7 +144,8 @@ console.log(testid)
      <Grid container alignItems="center" justifyContent='center' style={{marginBottom:'25px'}}>
         <Box style={{marginRight:'15px' , textAlign:'center' }}>
             <img src={examiner} style={{ height: '10rem' , width: '7rem' ,display:'block'  , borderRadius:'100px'}}/>
-            <Button onClick={()=>{
+            <Button variant='outlined' sx={{ backgroundColor: registerdata.gender == 'F' ? '#00264D' : 'white', color: registerdata.gender == 'F' ? 'white' : '#00264D' }}
+                onClick={()=>{
                 setregisterdata(prevState=>({
                     ...prevState,
                     gender: 'F'
@@ -153,7 +154,7 @@ console.log(testid)
         </Box>
         <Box style={{marginRight:'15px' , textAlign:'center'}}>
         <img src={examinee} style={{ height: '10rem' , width: '7rem' , display:'block' , borderRadius:'100px'}}/>
-            <Button onClick={()=>{
+            <Button variant='outlined' sx={{ backgroundColor: registerdata.gender == 'M' ? '#00264D' : 'white', color: registerdata.gender == 'M' ? 'white' : '#00264D' }} onClick={()=>{
                 setregisterdata(prevState=>({
                     ...prevState,
                     gender: 'M'
