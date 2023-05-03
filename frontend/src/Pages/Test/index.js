@@ -78,6 +78,7 @@ const Test = () => {
     autoConnect: false,
   });  
 
+  
   const sendData = async (data,test_state, identification_data , gaze_data, face_encoding, ) => {
 
 
@@ -109,7 +110,7 @@ const Test = () => {
           console.log("Invigilance : ")
           console.log(invigilance)
 
-          updateDatabase();
+          await updateDatabase();
           socket.disconnect()
         }
 

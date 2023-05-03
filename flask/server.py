@@ -111,7 +111,7 @@ def get_identification(payload):
             +"\nNo Movement "+str(round((nomovement/totalmovement)*100,2))+"%"+"\nRight Movement "+str(round((rightmovement/totalmovement)*100,2))+"%"
             # with open(os.path.join(os.getcwd() , 'identification' , 'face_results' , f'{str(id)}.txt') , 'w') as f1 , open(os.path.join(os.getcwd() , 'gaze' , 'gaze_results' , f'{str(id)}.txt') , 'w') as f2 , open(os.path.join(os.getcwd() , 'yolo' , 'results.txt') , 'w') as f3:
 
-    
+
     (total,no_face,correct_face,wrong_face) = (payload['identification_payload']['total_snapshots'], payload['identification_payload']['no_face'], payload['identification_payload']['correct_face'], payload['identification_payload']['wrong_face'])
     identification_result = "Correct Face = "+str(correct_face) + "\nNo Face = "+ str(no_face)+"\nWrong Face = "+str(wrong_face)+"\n\Correct Face "+str(round((correct_face/total)*100,2))+"%"\
         +"\nNo Face "+str(round((no_face/total)*100,2))+"%"+"\nWrong Face "+str(round((wrong_face/totalmovement)*100,2))+"%"
@@ -136,7 +136,7 @@ def get_identification(payload):
             (total,no_face,correct_face,wrong_face) = (payload['identification_payload']['total_snapshots'], payload['identification_payload']['no_face'], payload['identification_payload']['correct_face'], payload['identification_payload']['wrong_face'])
             f2.write(f"Correct Face = "+str(correct_face) + "\nNo Face = "+ str(no_face)+"\nWrong Face = "+str(wrong_face)+"\n\Correct Face "+str(round((correct_face/total)*100,2))+"%"\
             +"\nNo Face "+str(round((no_face/total)*100,2))+"%"+"\nWrong Face "+str(round((wrong_face/totalmovement)*100,2))+"%")
-                
+        
         
 
     emit('SEND_LIVE_STREAM' , (identification_result, payload["identification_payload"]  , gaze_result , inference_result , message , payload['gaze_payload'] , face_encoding))

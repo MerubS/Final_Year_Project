@@ -1,6 +1,6 @@
-Correct Face = 2
+Correct Face = 0
 No Face = 0
-Wrong Face = 8
-\Correct Face 20.0%
+Wrong Face = 6
+\Correct Face 0.0%
 No Face 0.0%
-Wrong Face 80.0%
+Wrong Face 100.0%
