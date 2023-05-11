@@ -19,7 +19,7 @@ const Uploadpic = () => {
    const navigate = useNavigate();
    const webcamRef = useRef(null);
    const [picCount, SetPicCount] = useState(0);
-   let poses = { forward: 10, left: 20, right: 30}
+   const [start, setStart] = useState("")
    const [current_pose, setPose] = useState("forward");
    const [loadingState, setLoadingState] = useState(false);
 
@@ -60,7 +60,7 @@ const Uploadpic = () => {
       setPose(direction);
       SetPicCount(count)
 
-      if(count === 30){
+      if(count === 29){
        setLoadingState(true);
       }  
 
@@ -80,7 +80,7 @@ const Uploadpic = () => {
 
    const capture = async () => {
 
-
+      setStart("start");
       await sendPicture(picCount,current_pose)
       
       // let counter = 0;
@@ -137,23 +137,26 @@ const Uploadpic = () => {
 
    return (
 
+      loadingState === true ? 
+
+         <Grid container justifyContent="center" alignItems="center" style={{background: 'linear-gradient(#FFFFFF,#02386E)',height:'100vh'}}>
+            <Spinner radius={120} color={"#333"} stroke={4} style={{alignSelf:'center',position: 'absolute', top: 300}}/>
+         </Grid>
+      :
+      
 <>
-         
       <Grid container justifyContent="center" alignItems="center" style={{background: 'linear-gradient(#FFFFFF,#02386E)',height:'100vh'}}>
          <Grid alignItems="center" style={{ width:'70vh',borderRadius: '0.5rem' , padding:"25px", borderStyle:'dashed', borderColor:'white' }}>
          
          <Typography align="center" variant="h6"> Capture Picture </Typography>
-         {/* <Typography align="center" sx={{color:'grey'}}> Please capture picture to complete the registration </Typography> */}
 
-         {current_pose !== "" ? <Typography align="center" sx={{color:'black'}}> Look {current_pose} </Typography> : 
+         {start === "start" ? <Typography align="center" sx={{color:'black'}}> Look {current_pose} </Typography> : 
          <Typography align="center" sx={{color:'grey'}}> Please capture picture to complete the registration </Typography>}
 
          <Typography align="center" sx={{color:'grey'}}> Wait Time : {30 - picCount} </Typography>
          <Box align="center" style={{padding:'10px'}}>
 
          <Webcam audio={false}  height={300} ref={webcamRef} screenshotFormat="image/jpeg" width={300} videoConstraints={videoConstraints}/>
-
-         <Spinner radius={120} color={"#333"} stroke={4} visible={loadingState} />
 
           </Box>   
              <Box align="center" style={{padding:'10px'}}>
