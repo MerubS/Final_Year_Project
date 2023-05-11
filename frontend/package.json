@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@material/circular-progress": "^14.0.0",
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.10.14",
     "@mui/x-data-grid": "^5.17.13",
@@ -18,10 +19,12 @@
     "moment": "^2.29.4",
     "node-fetch": "^3.3.0",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.7.4",
     "react-countdown": "^2.3.5",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.6.1",
     "react-scripts": "5.0.1",
+    "react-spinner-material": "^1.4.0",
     "react-webcam": "^7.0.1",
     "socket.io-client": "^4.5.4",
     "web-vitals": "^2.1.4"

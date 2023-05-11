@@ -13,6 +13,7 @@ from multiprocessing import Process
 import requests , json
 from dotenv import load_dotenv
 from identification.main import detect, identify
+from identification.pose import direction 
 from yolo.inference import perform_inference
 import tracemalloc
 
@@ -48,6 +49,7 @@ def register_user(payload):
     data = payload['data']
     id = payload['id']
     count = payload['count']
+    direction_ = payload['direction']
 
     imgdata = base64.b64decode(data)
     img = Image.open(io.BytesIO(imgdata))
@@ -63,11 +65,22 @@ def register_user(payload):
             print('1')
             os.chdir(os.path.join(os.getcwd() , 'identification' , 'images' , str(id)))
 
-    print(os.getcwd())
-    img.save('{}.jpg'.format(str(count)))
+    # print(os.getcwd())
 
-    if count == 29:
-        encodings = train_model()
+    _direction = asyncio.run(direction(np.array(img)))
+    if _direction == direction_:
+        count += 1
+        # direction_ = 'yes'
+        img.save('{}.jpg'.format(str(count)))
+    # else:
+    #     direction_ = 'no'
+
+
+    (payload['count'] , payload['direction']) = ( count , direction_ )
+
+    
+    if count == 31:
+        encodings = asyncio.run(train_model(id))
         # print((encodings))
         encodings = json.dumps(encodings, cls=NumpyEncoder)
         # encodings = json.loads(encodings)     
@@ -76,6 +89,8 @@ def register_user(payload):
         # print("MODEL RESULT " , train_model())
         # socketio.stop()
         print('All Done')
+    else:
+        emit('register_user' , payload)    
 
 # IDENTIFICATION
 @socketio.on('identification')

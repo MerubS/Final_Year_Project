@@ -6,7 +6,7 @@ import os
  
 
 # name = input('Enter Name : ')
-def train_model():
+async def train_model(id):
     print("Out : ",os.getcwd())
     while(1):
         print(os.getcwd())
@@ -17,7 +17,10 @@ def train_model():
     print("Out : ",os.getcwd())
 
 
-    imagePaths = list(paths.list_images('images'))
+
+    path = os.path.join('images' , id)
+
+    imagePaths = list(paths.list_images(path))
     print(imagePaths)
     data = {}
     encodings = []

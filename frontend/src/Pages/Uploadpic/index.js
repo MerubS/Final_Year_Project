@@ -5,6 +5,8 @@ import socketio from "socket.io-client";
 import Webcam from 'react-webcam';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Spinner from 'react-spinner-material';
+
 
 
 ////////// UserID will come from node backend after SignUp of student
@@ -13,12 +15,13 @@ import axios from "axios";
 
 const Uploadpic = () => {
 
-
-   const params = useParams();
    const candidate = JSON.parse(localStorage.getItem('Candidatedetails'));
    const navigate = useNavigate();
    const webcamRef = useRef(null);
    const [picCount, SetPicCount] = useState(0);
+   let poses = { forward: 10, left: 20, right: 30}
+   const [current_pose, setPose] = useState("forward");
+   const [loadingState, setLoadingState] = useState(false);
 
    const videoConstraints = {
      width: 550,
@@ -41,26 +44,74 @@ const Uploadpic = () => {
     );
  
  
-   const sendData = async (data, pic_number) => {
-    await socket.emit("register_user", {
+   const sendData = async (data, pic_number, direction) => {
+     socket.emit("register_user", {
        id: candidate.cnic,
        data: data,
-       count: pic_number
+       count: pic_number,
+       direction: direction
      });
    };
- 
+
+
+   socket.on("register_user", async ({count , direction , id , data}) => {
+
+      direction = (count > 10 && count < 20 ) ? "left" : ( ( count > 20 && count < 30 ) ? "right" : "forward");
+      setPose(direction);
+      SetPicCount(count)
+
+      if(count === 30){
+       setLoadingState(true);
+      }  
+
+      await sendPicture(count, direction)
+
+   });
+   
+   const sendPicture = async (i,key) =>{
+      let im = webcamRef.current.getScreenshot();
+      im = im.substring(23, im.length);
+      // SetPicCount(i+1+counter)
+      console.log(im)
+      await sendData(im,i,key)
+      await sleep(1000);
+   }
+
+
    const capture = async () => {
+
+
+      await sendPicture(picCount,current_pose)
       
-      for (let i = 0; i < 30 ; i++){
+      // let counter = 0;
+      // for (const key in poses) {
+
+      //    for (let i = 0; i < poses[key] ; i++){
+            
+      //       setPose(key);
+
+      //       let im = webcamRef.current.getScreenshot();
+      //       im = im.substring(23, im.length);
+      //       SetPicCount(i+1+counter)
+      //       console.log(im)
+      //       await sendData(im,i,key)
+      //       await sleep(1000);
+            
+      //    }
+      //    counter += 10;
+
+      //  }
+      
+      // for (let i = 0; i < 30 ; i++){
          
-         let im = webcamRef.current.getScreenshot();
-         im = im.substring(23, im.length);
-         SetPicCount(i+1)
-         console.log(im)
-        await sendData(im,i)
-         await sleep(1000);
+      //    let im = webcamRef.current.getScreenshot();
+      //    im = im.substring(23, im.length);
+      //    SetPicCount(i+1)
+      //    console.log(im)
+      //   await sendData(im,i)
+      //    await sleep(1000);
          
-      }
+      // }
 
       // socket.disconnect();
       // navigate('/test');
@@ -70,6 +121,7 @@ const Uploadpic = () => {
 
    socket.on("ADD_User_Encodings", async(encodings) => {
 
+      setLoadingState(false);
       console.log("ENCODINGS RECEIVED", candidate.cnic);
       socket.disconnect();
       navigate('/test');
@@ -86,13 +138,23 @@ const Uploadpic = () => {
    return (
 
 <>
+         
       <Grid container justifyContent="center" alignItems="center" style={{background: 'linear-gradient(#FFFFFF,#02386E)',height:'100vh'}}>
          <Grid alignItems="center" style={{ width:'70vh',borderRadius: '0.5rem' , padding:"25px", borderStyle:'dashed', borderColor:'white' }}>
+         
          <Typography align="center" variant="h6"> Capture Picture </Typography>
-         <Typography align="center" sx={{color:'grey'}}> Please capture picture to complete the registration </Typography>
+         {/* <Typography align="center" sx={{color:'grey'}}> Please capture picture to complete the registration </Typography> */}
+
+         {current_pose !== "" ? <Typography align="center" sx={{color:'black'}}> Look {current_pose} </Typography> : 
+         <Typography align="center" sx={{color:'grey'}}> Please capture picture to complete the registration </Typography>}
+
          <Typography align="center" sx={{color:'grey'}}> Wait Time : {30 - picCount} </Typography>
          <Box align="center" style={{padding:'10px'}}>
+
          <Webcam audio={false}  height={300} ref={webcamRef} screenshotFormat="image/jpeg" width={300} videoConstraints={videoConstraints}/>
+
+         <Spinner radius={120} color={"#333"} stroke={4} visible={loadingState} />
+
           </Box>   
              <Box align="center" style={{padding:'10px'}}>
              <Button variant="contained" onClick={capture} style={{color:'white' , background: 'linear-gradient(to right bottom, #00264D, #02386E , #00498D)' , margin:'auto'}} > Take Picture  </Button>
