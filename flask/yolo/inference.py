@@ -38,10 +38,10 @@ async def perform_inference(img , id):
                 else:
                     detections.append(obj)
 
-
-    with open(os.path.join("results" , f'{str(id)}.txt'), "r") as file:
-        lines = [line.rstrip() for line in file]
-    file.close()
+    if os.path.exists(os.path.join("results" , f'{str(id)}.txt')):
+        with open(os.path.join("results" , f'{str(id)}.txt'), "r") as file:
+            lines = [line.rstrip() for line in file]
+        file.close()
 
     with open(os.path.join("results" , f'{str(id)}.txt'), "a") as file:
             for obj in detections:
