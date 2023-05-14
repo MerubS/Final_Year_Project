@@ -1,15 +1,28 @@
 import axios from "axios";
-import { Grid } from "@mui/material";
+import { Grid , Button} from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
 import { useState ,useEffect} from "react";
+import OpenInFullIcon from '@mui/icons-material/OpenInFull';
+import ViewReport from "../ViewReport"
+import React from 'react';
+
+
 const Report = () => {
     const [rows,setrows] = useState([]);
+    const [data,setdata] = useState([]);
+    const [open , setOpen] = useState(false);
     const [examiner] = JSON.parse(localStorage.getItem('examiner'));
     useEffect(() => {
       axios.get('/api/report/getAllReport',{params:{id:examiner.examiner_id}})
       .then(function (response) {
         setrows(response.data.output) });
         }, []);
+
+        useEffect(() => {
+          console.log(data)
+            }, [data]);
+
+       
     const columns = [
         // { field: 'id', headerName: 'ID', width: 20 },
         { field: 'testname', headerName: 'Test', width: 130 },
@@ -21,15 +34,22 @@ const Report = () => {
         // { field: 'pass', headerName: 'Pass', width: 130 },
       ];
  return (
-    <Grid container sx={{height:'70vh',marginTop:3}}>
+  <>
+  {open && <ViewReport open={open} data={data} setopen={()=>{setOpen(false)}}/>}
+    <Grid container justifyContent='end' style={{padding:'2px'}}> 
+  <Button color="primary" size="medium" onClick={()=>{setOpen(true)}} startIcon={<OpenInFullIcon />}> </Button>
+   </Grid>
+    <Grid container sx={{height:'70vh'}}>
     <DataGrid
      rows={rows}
      columns={columns}
      pageSize={10}
-     rowsPerPageOptions={[10]}
-     checkboxSelection 
+     rowsPerPageOptions={[10]} 
+     onRowClick ={(e)=>{setdata(e.row)}}
       />
    </Grid>
+  </>
+
  
  );
 }

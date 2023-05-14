@@ -9,7 +9,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import './App.css';
 import Thankyou from "./Pages/Thankyou";
 
-//sdadsa
+
+
 function App() {
  
   return (
