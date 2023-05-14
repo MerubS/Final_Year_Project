@@ -78,7 +78,7 @@ def register_user(payload):
 
     (payload['count'] , payload['direction']) = ( count , direction_ )
 
-    
+        
     if count == 30:
         encodings = asyncio.run(train_model(id))
         # print((encodings))
