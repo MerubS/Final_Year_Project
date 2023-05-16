@@ -134,7 +134,7 @@ return (
     </div>
     <div>
     <h3>Gaze Detection</h3>
-    <BarChart width={400} height={300} data={gazedata} style={{marginRight:'80px'}}>
+    <BarChart width={500} height={300} data={gazedata} style={{marginRight:'60px'}}>
       <CartesianGrid strokeDasharray="3 3" />
       <XAxis dataKey="name" />
       <YAxis />
