@@ -91,7 +91,7 @@ const ViewReport = (props) => {
             });
             yaxis += 60
             doc.addImage(chartImage, 'PNG', xaxis, yaxis, 190, 0); 
-            doc.save('chart.pdf');
+            doc.save(`${props.data.name}.pdf`);
         
           })
           .catch((error) => {

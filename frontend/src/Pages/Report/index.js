@@ -67,7 +67,7 @@ console.log(uniqueValues);
   <>
   {open && <ViewReport open={open} data={data} setopen={()=>{setOpen(false)}}/>}
     <Grid container justifyContent='end' style={{padding:'2px'}}> 
-  <Button color="primary" size="medium" onClick={()=>{dataHandler()}} startIcon={<OpenInFullIcon />}> </Button>
+  <Button color="primary" size="medium" onClick={()=>{dataHandler()}} startIcon={<OpenInFullIcon />}> Expand Report </Button>
    </Grid>
     <Grid container sx={{height:'70vh'}}>
     <DataGrid

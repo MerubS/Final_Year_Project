@@ -15,7 +15,7 @@ export const Protectedcanroute = ({children}) => {
     console.log(isAuthenticated);
   return (
    
-    isAuthenticated.canauth? children : <Navigate to='/Login' replace/>
+    isAuthenticated.canauth? children : <Navigate to='/register' replace/>
 
   );
 }

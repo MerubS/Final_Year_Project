@@ -240,8 +240,6 @@ const updateDatabase = async () => {
 }
 const authenticate= Useauth();
 const submitHandler = async () => {
-  
-  console.log(answers)
   end.current = 'TEST ENDED';
   try {
     axios.post('http://localhost:5000/api/report/UpdateReport', {question , answers , testid:test.test_id , canid:candidate.cnic}  )
@@ -274,13 +272,15 @@ const renderer = ({ hours, minutes, seconds, completed }) => {
     setdisable(true);
     setopen(true);
   } else {
-    return <span style={{fontsize:'50px', fontweight:'bold'}}>{hours}:{minutes}:{seconds}</span>;
+    return  <div style={{ fontSize: '25px' }}>
+    Time Remaining: {hours}h {minutes}m {seconds}s
+  </div>
   }
 };
 
   return (
     <Grid container justifyContent="Center" sx={{padding:'30px'}}>
-        <Webcam audio={false}  height={300} ref={webcamRef} screenshotFormat="image/jpeg" width={300} videoConstraints={videoConstraints} onUserMedia={handleUserMedia}/>
+        <Webcam audio={false}   ref={webcamRef} width={0} height={0} screenshotFormat="image/jpeg"  videoConstraints={videoConstraints} onUserMedia={handleUserMedia}/>
         {open && <AlertDialog open={open} setopen={()=>{setopen(false)}} submit={()=>{submitHandler()}} timeup={disable}/>}
         <Grid container justifyContent="center" sx={{padding:'30px'}} >
         {/* <button onClick={startStream}/> */}
