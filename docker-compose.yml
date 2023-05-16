@@ -9,6 +9,8 @@ services:
       - MSSQL_PID=Express
     ports:
       - 1433:1433
+    volumes:
+      - mssql-data:/var/opt/mssql
 
   app:
     build:
@@ -24,3 +26,6 @@ services:
       - DB_USER=sa
       - DB_PASSWORD=YourPassword123
       - DB_DATABASE=YourDatabaseName
+
+volumes:
+  mssql-data:
