@@ -9,10 +9,12 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'rec
 const ViewReport = (props) => {
     const chartRef = useRef(null);
     const COLORS = ['#8884d8', '#83a6ed', '#8dd1e1', '#82ca9d', '#a4de6c', '#d0ed57'];
+    console.log("Report in View Report", props.data)
 
     const facedata = [
-        { name: 'Unknown', value: props.data.per_face[0], color: '#36A2EB' },
-        { name: 'Candidate', value: props.data.per_face[1], color: '#FF6384' },
+        { name: 'Correct Face', value: props.data.per_face[0], color: '#36A2EB' },
+        { name: 'No Face', value: props.data.per_face[1], color: '#FF6384' },
+        { name: 'Wrong Face', value: props.data.per_face[2], color: '#FF6384' },
       ];
       const gazedata = [
         { name: 'Left Movement', value: props.data.per_gaze[0], color: '#FFCE56' },
@@ -90,7 +92,7 @@ const ViewReport = (props) => {
               body: tableData.slice(1), // Table data rows
             });
             yaxis += 60
-            doc.addImage(chartImage, 'PNG', xaxis, yaxis, 190, 0); 
+            doc.addImage(chartImage, 'PNG', xaxis, yaxis, 100, 0); 
             doc.save(`${props.data.name}.pdf`);
         
           })
@@ -113,7 +115,7 @@ return (
             <Typography> Score:  {props.data.score}</Typography>
             <div ref={chartRef} style= {{display:'flex'}}>
       <div>
-      <h3>Face Detection</h3>
+      <h3>Face Verification</h3>
       <PieChart width={300} height={300}>
         <Pie
           dataKey="value"

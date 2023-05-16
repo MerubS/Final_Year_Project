@@ -158,9 +158,11 @@ const Test = () => {
 
   try {
     socket.connect();
+    
     console.log('StartSTREAM : ', end)  
         let im = webcamRef.current.getScreenshot();
         im = im.substring(23, im.length);
+        console.log("ssss" , im)
         socket.emit("identification" , {
 
           identification_payload,
@@ -280,7 +282,7 @@ const renderer = ({ hours, minutes, seconds, completed }) => {
 
   return (
     <Grid container justifyContent="Center" sx={{padding:'30px'}}>
-        <Webcam audio={false}   ref={webcamRef} width={0} height={0} screenshotFormat="image/jpeg"  videoConstraints={videoConstraints} onUserMedia={handleUserMedia}/>
+        <Webcam audio={false} ref={webcamRef} width={500} height={500} screenshotFormat="image/jpeg"  videoConstraints={videoConstraints} onUserMedia={handleUserMedia}/>
         {open && <AlertDialog open={open} setopen={()=>{setopen(false)}} submit={()=>{submitHandler()}} timeup={disable}/>}
         <Grid container justifyContent="center" sx={{padding:'30px'}} >
         {/* <button onClick={startStream}/> */}

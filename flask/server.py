@@ -140,6 +140,7 @@ def get_identification(payload):
         #     f1.write('')
         #     f2.write('')
         #     f3.write('')
+        print("test ended")
         
         with open(os.path.join(os.getcwd() , 'gaze' , 'gaze_results' , f'{str(id)}.txt') , 'w') as f1:
             (rightmovement,leftmovement,nomovement) = (payload['gaze_payload']['right_movement'], payload['gaze_payload']['left_movement'], payload['gaze_payload']['no_movement'])

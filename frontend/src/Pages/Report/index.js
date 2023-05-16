@@ -21,9 +21,13 @@ const Report = () => {
 console.log(data)
 
 const dataHandler =() => {
-  data.per_object = "person,person,laptop,phone,ipad,book,book"      // Have to remove
+
+  console.log("Showing report data...")
+  console.log(data)
+ // console.log("Object" , data.per_object)
+
   const objectdata = data.per_object.split(',') 
- const uniqueValues = [...new Set(objectdata)];
+ const uniqueValues = [...new Set(objectdata)].filter((o) => o !==  ' ');
  const countList = uniqueValues.reduce((count, value) => {
   const occurrences = objectdata.filter(item => item === value).length;
   count.push({ name: value, value: occurrences });
@@ -31,23 +35,21 @@ const dataHandler =() => {
 }, []);
 console.log("Countlist" , countList)
 console.log(uniqueValues);
-  data.per_face = "24672347 , unknown , 2636254 , unknown , unknown"      // Have to remove
-  const facedata = data.per_face.split(",")
-  console.log(facedata)
-  const count = facedata.filter(item => item === ' unknown ').length;
+  const facedata = data.per_face.split("\\")
+  let count = facedata[1].match(/\d+(?:\.\d+)?/g).map((o) => Math.round(o , 1));
+  console.log("Face After Split",facedata)
   console.log(count)
-  data.per_gaze = "Left Movement: 3 , Right Movement: 8, No Movement: 10"         // Have to remove
         const gazedata = data.per_gaze.split(",")
       const secondData = gazedata.map(item => {
-        const [_, secondPart] = item.split(':');
+        const [_, secondPart] = item.split('=');
         return Number(secondPart);
       });
       console.log(secondData)
       setdata(prevState=>({
         ...prevState,
         per_gaze : secondData,
-        per_face : [count , facedata.length - count],
-        per_object : countList
+        per_face : count,
+        per_object: countList
       }))
       setOpen(true)
 }

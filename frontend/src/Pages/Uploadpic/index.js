@@ -47,7 +47,7 @@ const Uploadpic = () => {
    const sendData = async (data, pic_number, direction) => {
      socket.emit("register_user", {
        id: candidate.cnic,
-       data: data,
+       data: data,   
        count: pic_number,
        direction: direction
      });
