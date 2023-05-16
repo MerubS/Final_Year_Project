@@ -8,6 +8,7 @@ import AlertDialog from "../../Components/DialogueBox/AlertDialogue";
 import socketio from "socket.io-client";
 import Webcam from 'react-webcam';
 import moment from "moment/moment";
+import Useauth from "../../Routes/Auth";
 
 const Test = () => {
 
@@ -237,7 +238,7 @@ const updateDatabase = async () => {
   }
 
 }
-
+const authenticate= Useauth();
 const submitHandler = async () => {
   
   console.log(answers)
@@ -246,6 +247,7 @@ const submitHandler = async () => {
     axios.post('http://localhost:5000/api/report/UpdateReport', {question , answers , testid:test.test_id , canid:candidate.cnic}  )
     .then((response)=>{
       console.log(response.data.message);
+      authenticate.setcanauth(false)
       navigate('/thankyou');
     });
    }
