@@ -9,12 +9,6 @@ const ActionAreaCard = (props) => {
   return (
     <Card sx={{ maxWidth: 250 , background:'linear-gradient(to right bottom, #02386E , #00498D)' , marginRight:'1.5rem' , marginBottom:'0.5rem' }}>
       <CardActionArea>
-        <CardMedia
-          component="img"
-          height="140"
-          img = {require('../Icons/audio.png')}
-          alt="Representation"
-        />
         <CardContent>
           <Typography gutterBottom variant="h6" component="div" style={{color:"white"}}>
             {props.title}
