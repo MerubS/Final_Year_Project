@@ -19,6 +19,7 @@ const Test = () => {
   const [question,setquestions] = useState('');
   const [loading , setloading] = useState(false);
   const [answers,setanswers] = useState([]);
+  const webcamRef = useRef(null);
   const time = moment();
 
   const refAnswers = useRef();
@@ -40,7 +41,10 @@ const Test = () => {
   resizesRef.current = TabResizing;
 
 
-
+  const handleUserMedia = () => {
+    console.log("Reference Assigned streaming started")
+    startStream()
+  }
 
   const handleBlur = () => {
     setnumTabChanges(numTabChanges+1)
@@ -64,10 +68,6 @@ const Test = () => {
       window.removeEventListener('blur', handleBlur);
     };
   });
-
-
-
-  const webcamRef = useRef(null);
 
   const videoConstraints = {
     width: 550,
@@ -242,16 +242,16 @@ const submitHandler = async () => {
   
   console.log(answers)
   end.current = 'TEST ENDED';
-  // try {
-  //   axios.post('http://localhost:5000/api/report/UpdateReport', {question , answers , testid:test.test_id , canid:candidate.cnic}  )
-  //   .then((response)=>{
-  //     console.log(response.data.message);
-  //     navigate('/thankyou');
-  //   });
-  //  }
-  //  catch (error) {
-  //      console.log(error.response);
-  //  }
+  try {
+    axios.post('http://localhost:5000/api/report/UpdateReport', {question , answers , testid:test.test_id , canid:candidate.cnic}  )
+    .then((response)=>{
+      console.log(response.data.message);
+      navigate('/thankyou');
+    });
+   }
+   catch (error) {
+       console.log(error.response);
+   }
 }
 const changeHandler = (event, qid) => {
   var r = answers.find(item => item.id === qid)
@@ -278,10 +278,10 @@ const renderer = ({ hours, minutes, seconds, completed }) => {
 
   return (
     <Grid container justifyContent="Center" sx={{padding:'30px'}}>
-        <Webcam audio={false}  height={300} ref={webcamRef} screenshotFormat="image/jpeg" width={300} videoConstraints={videoConstraints}/>
+        <Webcam audio={false}  height={300} ref={webcamRef} screenshotFormat="image/jpeg" width={300} videoConstraints={videoConstraints} onUserMedia={handleUserMedia}/>
         {open && <AlertDialog open={open} setopen={()=>{setopen(false)}} submit={()=>{submitHandler()}} timeup={disable}/>}
         <Grid container justifyContent="center" sx={{padding:'30px'}} >
-        <button onClick={startStream}/>
+        {/* <button onClick={startStream}/> */}
          {loading && <Countdown date={Date.now()+3000000} renderer={renderer} /> }
         </Grid>
         <Grid container sx={{borderRadius:10,padding:'50px',borderStyle:'solid',borderImage:'linear-gradient(to right bottom, #00264D, #02386E , #00498D) 1',borderWidth:'5px'}}>

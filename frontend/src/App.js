@@ -10,7 +10,6 @@ import './App.css';
 import Thankyou from "./Pages/Thankyou";
 
 
-
 function App() {
  
   return (
