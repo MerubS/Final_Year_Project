@@ -1,0 +1,26 @@
+version: '3'
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server
+    container_name: mssql-db
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourPassword123
+      - MSSQL_PID=Express
+    ports:
+      - 1433:1433
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: node-app
+    depends_on:
+      - db
+    ports:
+      - 3000:3000
+    environment:
+      - DB_SERVER=db
+      - DB_USER=sa
+      - DB_PASSWORD=YourPassword123
+      - DB_DATABASE=YourDatabaseName
