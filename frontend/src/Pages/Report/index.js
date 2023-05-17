@@ -25,32 +25,44 @@ const getAllReport = () => {
   setloading(true)
   axios.get('/api/report/getAllReport',{params:{id:examiner.examiner_id}})
   .then(function (response) {
-    setrows(response.data.output) 
+    console.log(response.data.output)
+    setrows(response.data.output.reverse()) 
     setloading(false);
   });
 }
 
 const dataHandler = () => {  
 if (data.length !== 0) {
-  const objectdata = data.per_object.split(',') 
- const uniqueValues = [...new Set(objectdata)].filter((o) => o !==  ' ');
- const countList = uniqueValues.reduce((count, value) => {
+  let objectdata , countList = null , uniqueValues , onlyEmptyStrings , facedata , count = null, gazedata , secondData = null;
+  if (data.per_object !== null) {
+  objectdata = data.per_object.split(',') 
+  countList= null
+  uniqueValues = [...new Set(objectdata)].filter((o) => o !==  ' ');
+  onlyEmptyStrings = uniqueValues.every(item => item === '');
+ if (onlyEmptyStrings == false) {
+  countList = uniqueValues.reduce((count, value) => {
   const occurrences = objectdata.filter(item => item === value).length;
   count.push({ name: value, value: occurrences });
   return count;
 }, []);
+ }
+}
 console.log("Countlist" , countList)
 console.log(uniqueValues);
-  const facedata = data.per_face.split("\\")
-  let count = facedata[1].match(/\d+(?:\.\d+)?/g).map((o) => Math.round(o , 1));
+if (data.per_face !== null) {  
+  facedata = data.per_face.split("\\")
+  count = facedata[1].match(/\d+(?:\.\d+)?/g).map((o) => Math.round(o , 1));
   console.log("Face After Split",facedata)
   console.log(count)
-        const gazedata = data.per_gaze.split(",")
-      const secondData = gazedata.map(item => {
+}
+if (data.per_gaze != null) {
+        gazedata = data.per_gaze.split(",")
+        secondData = gazedata.map(item => {
         const [_, secondPart] = item.split('=');
         return Number(secondPart);
       });
       console.log(secondData)
+    }
       setdata(prevState=>({
         ...prevState,
         per_gaze : secondData,
@@ -73,10 +85,12 @@ function CustomLoadingOverlay() {
         // { field: 'id', headerName: 'ID', width: 20 },
         { field: 'testname', headerName: 'Test', width: 130 },
         { field: 'name', headerName: 'Candidate', width: 130 },
-        { field: 'per_face', headerName: '% Face ', width: 130 },
-        { field: 'per_gaze', headerName: '% Gaze', width: 130 },
-        { field: 'per_object', headerName: '% Object', width: 130 },
-        { field: 'score', headerName: 'Score', width: 130 },
+        { field: 'per_face', headerName: 'Face ', width: 130 },
+        { field: 'per_gaze', headerName: 'Gaze', width: 130 },
+        { field: 'per_object', headerName: 'Object', width: 130 },
+        { field: 'score', headerName: 'Score %', width: 130 },
+        {field: 'tabchange', headerName: 'Tab Changes' , width:130},
+        {field: 'resize' , headerName: 'Resize' , width: 130}
         // { field: 'pass', headerName: 'Pass', width: 130 },
       ];
  return (

@@ -18,6 +18,7 @@ const Test = () => {
   const candidate = JSON.parse(localStorage.getItem('Candidatedetails'));
   const test = JSON.parse(localStorage.getItem('Testdetails'));
   const [question,setquestions] = useState('');
+  const questionRef = useRef();
   const [loading , setloading] = useState(false);
   const [answers,setanswers] = useState([]);
   const webcamRef = useRef(null);
@@ -41,7 +42,9 @@ const Test = () => {
   const resizesRef = useRef();
   resizesRef.current = TabResizing;
 
-
+useEffect(()=>{
+  console.log("Question value is", question)
+},[question])
   const handleUserMedia = () => {
     console.log("Reference Assigned streaming started")
     startStream()
@@ -111,7 +114,7 @@ const Test = () => {
           console.log("Invigilance : ")
           console.log(invigilance)
 
-        //  await updateDatabase();
+        await updateDatabase();
           socket.disconnect()
         }
 
@@ -199,9 +202,10 @@ const Test = () => {
   })
   axios.get('/api/question/getQuestionbyTestId',{params:{id : test.test_id}})
   .then(function (response) {
+    console.log("Question", response.data.output);
     console.log(response.data.output)
     setquestions(response.data.output);
-    // capture();          ///////// capture
+    questionRef.current = response.data.output;
  })
 },[]);
 
@@ -226,9 +230,10 @@ const updateDatabase = async () => {
     console.log("BHAI INVIGILANCE KO BHEJDO ", invigilance)
     console.log("BHAI answers KO BHEJDO ", refAnswers.current)
     console.log("Screen resizing ", tabChangesRef.current,"    ",resizesRef.current)
+    console.log("Question in updateDatabase", question);
     
      try {
-    await axios.post('http://localhost:5000/api/report/UpdateReport', {tabChanges : tabChangesRef.current, resizes : resizesRef.current, question , answer : refAnswers.current , testid:test.test_id , canid:candidate.cnic , per_face:invigilance.face , per_object:invigilance.object , per_gaze:invigilance.gaze}  )
+    await axios.post('http://localhost:5000/api/report/UpdateReport', {tabChanges : tabChangesRef.current, resizes : resizesRef.current, question: questionRef.current , answer : refAnswers.current , testid:test.test_id , canid:candidate.cnic , per_face:invigilance.face , per_object:invigilance.object , per_gaze:invigilance.gaze}  )
     .then((response)=>{
       console.log("Response is:" , response.data.message);
       authenticate.setcanauth(false)
@@ -244,17 +249,6 @@ const updateDatabase = async () => {
 const authenticate= Useauth();
 const submitHandler = async () => {
   end.current = 'TEST ENDED';
-  try {
-    axios.post('http://localhost:5000/api/report/UpdateReport', {question , answers , testid:test.test_id , canid:candidate.cnic}  )
-    .then((response)=>{
-      console.log(response.data.message);
-      authenticate.setcanauth(false)
-      navigate('/thankyou');
-    });
-   }
-   catch (error) {
-       console.log(error.response);
-   }
 }
 const changeHandler = (event, qid) => {
   var r = answers.find(item => item.id === qid)
@@ -284,17 +278,15 @@ const renderer = ({ hours, minutes, seconds, completed }) => {
   return (
     <Grid container justifyContent="Center" sx={{padding:'30px'}}>
         <Webcam audio={false} ref={webcamRef} width={500} height={500} screenshotFormat="image/jpeg"  videoConstraints={videoConstraints} onUserMedia={handleUserMedia}/>
-        {open && <AlertDialog open={open} setopen={()=>{setopen(false)}} submit={()=>{updateDatabase()}} timeup={disable}/>}
+        {open && <AlertDialog open={open} setopen={()=>{setopen(false)}} submit={()=>{submitHandler()}} timeup={disable}/>}
         <Grid container justifyContent="center" sx={{padding:'30px'}} >
-        {/* <button onClick={startStream}/> */}
-         {loading && <Countdown date={Date.now()+3000000} renderer={renderer} /> }
+         {loading && <Countdown date={Date.now()+ test.timelimit} renderer={renderer} /> }
         </Grid>
         <Grid container sx={{borderRadius:10,padding:'50px',borderStyle:'solid',borderImage:'linear-gradient(to right bottom, #00264D, #02386E , #00498D) 1',borderWidth:'5px'}}>
         <Grid  item xs={12}>
         <Box style={{display:'block'}}>
-        <span style={{display:'block'}}> Name: First Last  </span>
-        <span style={{display:'block'}}> Questions: No.of Questions</span>
-        <span style={{display:'block'}}> Timelimit: time</span>
+        <span style={{display:'block'}}> Name: {candidate.name}  </span>
+        <span style={{display:'block'}}> Questions: {test.no_questions} </span>
         </Box>
         </Grid>
         <Grid item xs={12}>

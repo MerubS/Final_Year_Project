@@ -28,6 +28,12 @@ const Register = () => {
         setmessage("Test not started by the examiner");
       }
       else {
+        if (testdata.unit === 'min       ') {
+            testdata.timelimit = testdata.timelimit * 60000;
+        }
+        if (testdata.unit === 'hr       ') {
+            testdata.timelimit = testdata.timelimit * 3600000;
+        }
       localStorage.setItem('Testdetails', JSON.stringify(testdata));
          if (registerdata.city!=='' && registerdata.cnic!=='' && registerdata.contact!='' && registerdata.dob!='' && registerdata.email!=''
        && registerdata.gender!='' && registerdata.name!='') {

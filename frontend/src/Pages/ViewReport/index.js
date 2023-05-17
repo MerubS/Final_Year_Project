@@ -7,6 +7,7 @@ import { PieChart, Pie, Cell } from 'recharts';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 const ViewReport = (props) => {
+  console.log(props.data)
     const chartRef = useRef(null);
     const COLORS = ['#8884d8', '#83a6ed', '#8dd1e1', '#82ca9d', '#a4de6c', '#d0ed57'];
     console.log("Report in View Report", props.data)
@@ -28,14 +29,17 @@ const ViewReport = (props) => {
         const xaxis = 20;
         html2canvas(chartContainer)
           .then((canvas) => {
-            const concatenatedString = props.data.per_object.map(obj => obj.name).join(', ');
+            let concatenatedString = null;
+            if (props.data.per_object !== null) {
+            concatenatedString = props.data.per_object.map(obj => obj.name).join(', ');
+            }
             const tableData = [
               ['Heading', 'Information'],
               ['Face Recognition', "Unknown: " + props.data.per_face[0] + ", Candidate: " + props.data.per_face[1]],
               ['Gaze Detection', 'Left Movement: ' + props.data.per_gaze[0]+ ' ,Right Movement: ' + props.data.per_gaze[1] + ' ,No Movement: ' + props.data.per_gaze[2]],
               ['Objection Detection', concatenatedString],
-              ['Tabs Changed' , 0],
-              ['Tabs Resized' , 3]
+              ['Tabs Changed' , props.data.tabchange],
+              ['Tabs Resized' , props.data.resize]
             ];
           
       
@@ -61,9 +65,9 @@ const ViewReport = (props) => {
             yaxis += 5
             doc.text('Email: '+ props.data.email, xaxis +5, yaxis);
             yaxis += 5
-            doc.text('Date of Birth: '+ props.data.dob, xaxis+5, yaxis);
+            doc.text('Date of Birth: '+ props.data.birthdate.substring(0, 10), xaxis+5, yaxis);
             yaxis += 5
-            doc.text('City: '+ props.data.city, xaxis+5, yaxis);
+            doc.text('City: '+ props.data.City, xaxis+5, yaxis);
 
             yaxis = 36
             yaxis += 10
@@ -92,7 +96,7 @@ const ViewReport = (props) => {
               body: tableData.slice(1), // Table data rows
             });
             yaxis += 60
-            doc.addImage(chartImage, 'PNG', xaxis, yaxis, 100, 0); 
+            doc.addImage(chartImage, 'PNG', xaxis, yaxis, 180, 0); 
             doc.save(`${props.data.name}.pdf`);
         
           })
@@ -114,7 +118,7 @@ return (
             <Typography> Timelimit:  {props.data.time}</Typography>
             <Typography> Score:  {props.data.score}</Typography>
             <div ref={chartRef} style= {{display:'flex'}}>
-      <div>
+     {facedata && <div>
       <h3>Face Verification</h3>
       <PieChart width={300} height={300}>
         <Pie
@@ -134,6 +138,8 @@ return (
       <Legend />
       </PieChart>
     </div>
+}
+{gazedata && 
     <div>
     <h3>Gaze Detection</h3>
     <BarChart width={500} height={300} data={gazedata} style={{marginRight:'60px'}}>
@@ -146,6 +152,8 @@ return (
     </BarChart>
 
     </div>
+}
+{props.data.per_object &&
     <div>
       <h3>Object Detection</h3>
       <PieChart width={300} height={300}>
@@ -168,8 +176,9 @@ return (
         <Legend/>
       </PieChart>
     </div>
+}
       </div>
-            
+      
         
         </DialogContent>
         <DialogActions>
