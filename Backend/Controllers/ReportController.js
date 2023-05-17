@@ -6,7 +6,7 @@ const { Console } = require('winston/lib/winston/transports');
 const UpdateReport = ((req,res)=> {
     let {tabChanges,resizes, question, answer, testid , canid , per_face , per_object  , per_gaze } = req.body;
     let enddate = new Date();
-
+    console.log(req.body);
     console.log("BHAI ANSWER " + tabChanges.toString() + " " + resizes.toString())
 
     per_gaze = _.replace(per_gaze , new RegExp("\n","g") , ' , ')

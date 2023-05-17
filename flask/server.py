@@ -5,7 +5,7 @@ import gaze.tracking as tracking
 from identification.train import train_model
 import base64
 from PIL import Image
-import cv2
+import shutil
 import numpy as np
 import io , os
 import asyncio
@@ -88,6 +88,13 @@ def register_user(payload):
         emit('ADD_User_Encodings' , (encodings))
         # print("MODEL RESULT " , train_model())
         # socketio.stop()
+        
+        #For removing stored pictures for training
+        filePath =  os.path.join(os.getcwd(),'images',str(id))
+        if os.path.isdir(filePath):
+            shutil.rmtree(filePath)
+            print(filePath)
+
         print('All Done')
     else:
         emit('register_user' , payload)    
