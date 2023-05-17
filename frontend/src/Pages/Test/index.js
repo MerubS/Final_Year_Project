@@ -111,7 +111,7 @@ const Test = () => {
           console.log("Invigilance : ")
           console.log(invigilance)
 
-          await updateDatabase();
+        //  await updateDatabase();
           socket.disconnect()
         }
 
@@ -230,7 +230,8 @@ const updateDatabase = async () => {
      try {
     await axios.post('http://localhost:5000/api/report/UpdateReport', {tabChanges : tabChangesRef.current, resizes : resizesRef.current, question , answer : refAnswers.current , testid:test.test_id , canid:candidate.cnic , per_face:invigilance.face , per_object:invigilance.object , per_gaze:invigilance.gaze}  )
     .then((response)=>{
-      console.log(response.data.message);
+      console.log("Response is:" , response.data.message);
+      authenticate.setcanauth(false)
       navigate('/thankyou');
     });
    }
@@ -283,7 +284,7 @@ const renderer = ({ hours, minutes, seconds, completed }) => {
   return (
     <Grid container justifyContent="Center" sx={{padding:'30px'}}>
         <Webcam audio={false} ref={webcamRef} width={500} height={500} screenshotFormat="image/jpeg"  videoConstraints={videoConstraints} onUserMedia={handleUserMedia}/>
-        {open && <AlertDialog open={open} setopen={()=>{setopen(false)}} submit={()=>{submitHandler()}} timeup={disable}/>}
+        {open && <AlertDialog open={open} setopen={()=>{setopen(false)}} submit={()=>{updateDatabase()}} timeup={disable}/>}
         <Grid container justifyContent="center" sx={{padding:'30px'}} >
         {/* <button onClick={startStream}/> */}
          {loading && <Countdown date={Date.now()+3000000} renderer={renderer} /> }
