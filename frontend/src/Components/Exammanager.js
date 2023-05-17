@@ -32,13 +32,7 @@ const Exammanager = (props) => {
     })
       
   }
-  function CustomLoadingOverlay() {
-    return (
-      <GridOverlay>
-        <CircularProgress color="primary" size={40} />
-      </GridOverlay>
-    );
-  }
+  
   useEffect(() => {
   getAllTest()
     }, []);
