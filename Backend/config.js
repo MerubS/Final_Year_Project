@@ -1,7 +1,7 @@
 const sqlConfig = {
-    user: 'SIT',
-    password: '34670',
-    server: 'SHAIKHZ',
+    user: 'smartinvigilancetool',
+    password: 'finalyearproject#23',
+    server: 'final-year-project-ksm.database.windows.net',
     database: 'FinalyearProject',
     pool:{
         max:5,

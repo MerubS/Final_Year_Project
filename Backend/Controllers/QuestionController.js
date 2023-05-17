@@ -138,8 +138,13 @@ const DeleteQuestion = ((req,res)=>{
           req.input('qid', questionid)
           req.input('eid' , examinerid)
           req.execute("DeleteQuestion" , (err,result) => {
-            console.log("Recordset" , result.recordset);
+            if (err) {
+              console.log(err)
+            }
+            else {
+            console.log("Recordset" , result);
             res.send({message: "Success"});
+            }
           })
     })
   }

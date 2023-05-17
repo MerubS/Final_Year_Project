@@ -10,17 +10,17 @@ import Paper from '@mui/material/Paper';
 import axios from 'axios';
 import { useState , useEffect } from "react";
 import { DataGrid } from '@mui/x-data-grid';
-const Exammanager = () => {
+const Exammanager = (props) => {
   const [examiner] = JSON.parse(localStorage.getItem('examiner'));
   const [rows,setrows] = useState([]);
+  const [loading , setloading] = useState(props.loading);
   const columns = [
     { field: 'name', headerName: 'Assessment Name', width: 130 },
     { field: 'url', headerName: 'URL', width: 300 },
     { field: 'difficulty', headerName: 'Difficulty', width: 130 },
   ];
    
-  useEffect(() => {
-    console.log(examiner);
+  const getAllTest = () => {
     axios.get('/api/test/getAllTest',{params:{id:examiner.examiner_id}})
     .then(function (response) {
       let modrows = []
@@ -29,9 +29,18 @@ const Exammanager = () => {
         modrows.push({id:e.id , name:e.name , difficulty:e.difficulty , url:URL})
       })
       setrows(modrows);
-      
     })
-
+      
+  }
+  function CustomLoadingOverlay() {
+    return (
+      <GridOverlay>
+        <CircularProgress color="primary" size={40} />
+      </GridOverlay>
+    );
+  }
+  useEffect(() => {
+  getAllTest()
     }, []);
 
 return (

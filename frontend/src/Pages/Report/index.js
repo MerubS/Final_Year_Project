@@ -1,9 +1,10 @@
 import axios from "axios";
 import { Grid , Button} from "@mui/material";
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid , GridOverlay} from '@mui/x-data-grid';
 import { useState ,useEffect} from "react";
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 import ViewReport from "../ViewReport"
+import CircularProgress from '@mui/material/CircularProgress';
 import React from 'react';
 
 
@@ -11,16 +12,26 @@ const Report = () => {
     const [rows,setrows] = useState([]);
     const [data,setdata] = useState([]);
     const [open , setOpen] = useState(false);
+    const [loading , setloading] = useState(false);
     
     const [examiner] = JSON.parse(localStorage.getItem('examiner'));
+
     useEffect(() => {
-      axios.get('/api/report/getAllReport',{params:{id:examiner.examiner_id}})
-      .then(function (response) {
-        setrows(response.data.output) });
+      getAllReport();
         }, []);
-console.log(data)
+
+
+const getAllReport = () => {
+  setloading(true)
+  axios.get('/api/report/getAllReport',{params:{id:examiner.examiner_id}})
+  .then(function (response) {
+    setrows(response.data.output) 
+    setloading(false);
+  });
+}
 
 const dataHandler =() => {
+if (data.length !== 0) {
   data.per_object = "person,person,laptop,phone,ipad,book,book"      // Have to remove
   const objectdata = data.per_object.split(',') 
  const uniqueValues = [...new Set(objectdata)];
@@ -50,9 +61,17 @@ console.log(uniqueValues);
         per_object : countList
       }))
       setOpen(true)
+    }
 }
     
-       
+function CustomLoadingOverlay() {
+  return (
+    <GridOverlay>
+      <CircularProgress color="primary" size={40} />
+    </GridOverlay>
+  );
+}
+
     const columns = [
         // { field: 'id', headerName: 'ID', width: 20 },
         { field: 'testname', headerName: 'Test', width: 130 },
@@ -76,6 +95,10 @@ console.log(uniqueValues);
      pageSize={10}
      rowsPerPageOptions={[10]} 
      onRowClick ={(e)=>{setdata(e.row)}}
+     components={{
+      LoadingOverlay: CustomLoadingOverlay
+    }}
+    loading={loading}
       />
    </Grid>
   </>

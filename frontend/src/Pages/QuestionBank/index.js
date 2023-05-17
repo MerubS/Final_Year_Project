@@ -6,12 +6,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import EditQuestion from "../../Components/DialogueBox/EditQuestion";
 import axios from "axios";
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid , GridOverlay } from '@mui/x-data-grid';
 import { useState ,useEffect} from "react";
 import PositionedSnackbar from "../../Components/DialogueBox/Snackbar";
+import CircularProgress from '@mui/material/CircularProgress';
 
 const QuestionBank = () => {
     const [examiner] = JSON.parse(localStorage.getItem('examiner'));
+    const [loading,setloading] = useState(false);
     const [open , setOpen] = useState(false);
     const [rows,setrows] = useState([]);
     const [currques , setcurrques] = useState();
@@ -25,14 +27,28 @@ const QuestionBank = () => {
      })
     }
 
+   const getAllQuestion = () => {
+    setloading(true)
+    axios.get('/api/question/getAllQuestion',{params:{id:examiner.examiner_id}})
+  .then(function (response) {
+    setrows(response.data.output);
+    setloading(false)
+  })
+   }
 
     useEffect(() => {
-      axios.get('/api/question/getAllQuestion',{params:{id:examiner.examiner_id}})
-    .then(function (response) {
-      setrows(response.data.output);
-    })
-        }, []);
+      if (sbar.sstatus == '' || sbar.sstatus == 'success') {
+      getAllQuestion()
+      }
+        }, [sbar]);
 
+        function CustomLoadingOverlay() {
+          return (
+            <GridOverlay>
+              <CircularProgress color="primary" size={40} />
+            </GridOverlay>
+          );
+        }
 
    const deleteques = () => {
     axios.get('/api/question/DeleteQuestion',{params:{qid:currques.id , eid:examiner.examiner_id}})
@@ -44,6 +60,7 @@ const QuestionBank = () => {
     })
         }
         
+
     const columns = [
         { field: 'question', headerName: 'Question', width: 300 },
         { field: 'difficulty', headerName: 'Difficulty', width: 130 },
@@ -64,6 +81,10 @@ const QuestionBank = () => {
      pageSize={10}
      rowsPerPageOptions={[10]}
      onRowClick ={(e)=>{setcurrques(e.row)}}
+     components={{
+      LoadingOverlay: CustomLoadingOverlay
+    }}
+    loading={loading}
       />
    </Grid>
         <Grid container alignItems="left" justifyContent='left' style={{marginBottom:'25px'}}>
