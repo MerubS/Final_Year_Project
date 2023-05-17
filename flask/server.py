@@ -5,7 +5,7 @@ import gaze.tracking as tracking
 from identification.train import train_model
 import base64
 from PIL import Image
-import shutil
+import cv2
 import numpy as np
 import io , os
 import asyncio
@@ -88,20 +88,13 @@ def register_user(payload):
         emit('ADD_User_Encodings' , (encodings))
         # print("MODEL RESULT " , train_model())
         # socketio.stop()
-        
-        #For removing stored pictures for training
-        filePath =  os.path.join(os.getcwd(),'images',str(id))
-        if os.path.isdir(filePath):
-            shutil.rmtree(filePath)
-            print(filePath)
-
         print('All Done')
     else:
         emit('register_user' , payload)    
 
 # IDENTIFICATION
 @socketio.on('identification')
-def get_identification(payload):
+def get_identification(payload):  
 
     print(payload["gaze_payload"])
     identification_payload = payload["identification_payload"]
@@ -129,12 +122,18 @@ def get_identification(payload):
 
     (rightmovement,leftmovement,nomovement) = (payload['gaze_payload']['right_movement'], payload['gaze_payload']['left_movement'], payload['gaze_payload']['no_movement'])
     totalmovement = rightmovement+leftmovement+nomovement
+    if totalmovement == 0:
+        totalmovement = 1
+
     gaze_result = "Left Movement = "+str(leftmovement) + "\nNo Movement = "+ str(nomovement)+"\nRight Movement = "+str(rightmovement)+"\n\nLeft Movement "+str(round((leftmovement/totalmovement)*100,2))+"%"\
             +"\nNo Movement "+str(round((nomovement/totalmovement)*100,2))+"%"+"\nRight Movement "+str(round((rightmovement/totalmovement)*100,2))+"%"
             # with open(os.path.join(os.getcwd() , 'identification' , 'face_results' , f'{str(id)}.txt') , 'w') as f1 , open(os.path.join(os.getcwd() , 'gaze' , 'gaze_results' , f'{str(id)}.txt') , 'w') as f2 , open(os.path.join(os.getcwd() , 'yolo' , 'results.txt') , 'w') as f3:
 
 
-    (total,no_face,correct_face,wrong_face) = (payload['identification_payload']['total_snapshots'], payload['identification_payload']['no_face'], payload['identification_payload']['correct_face'], payload['identification_payload']['wrong_face'])
+    (no_face,correct_face,wrong_face) = ( payload['identification_payload']['no_face'], payload['identification_payload']['correct_face'], payload['identification_payload']['wrong_face'])
+    total = no_face+correct_face+wrong_face
+    if total == 0:
+        total = 1
     identification_result = "Correct Face = "+str(correct_face) + "\nNo Face = "+ str(no_face)+"\nWrong Face = "+str(wrong_face)+"\n\Correct Face "+str(round((correct_face/total)*100,2))+"%"\
         +"\nNo Face "+str(round((no_face/total)*100,2))+"%"+"\nWrong Face "+str(round((wrong_face/totalmovement)*100,2))+"%"
     
@@ -152,11 +151,16 @@ def get_identification(payload):
         with open(os.path.join(os.getcwd() , 'gaze' , 'gaze_results' , f'{str(id)}.txt') , 'w') as f1:
             (rightmovement,leftmovement,nomovement) = (payload['gaze_payload']['right_movement'], payload['gaze_payload']['left_movement'], payload['gaze_payload']['no_movement'])
             totalmovement = rightmovement+leftmovement+nomovement
+            if totalmovement == 0:
+                totalmovement = 1
             f1.write(f"Left Movement = "+str(leftmovement) + "\nNo Movement = "+ str(nomovement)+"\nRight Movement = "+str(rightmovement)+"\n\nLeft Movement "+str(round((leftmovement/totalmovement)*100,2))+"%"\
             +"\nNo Movement "+str(round((nomovement/totalmovement)*100,2))+"%"+"\nRight Movement "+str(round((rightmovement/totalmovement)*100,2))+"%")
         
         with open(os.path.join(os.getcwd() ,'identification' , 'face_results' , f'{str(id)}.txt') , 'w') as f2:
-            (total,no_face,correct_face,wrong_face) = (payload['identification_payload']['total_snapshots'], payload['identification_payload']['no_face'], payload['identification_payload']['correct_face'], payload['identification_payload']['wrong_face'])
+            (no_face,correct_face,wrong_face) = ( payload['identification_payload']['no_face'], payload['identification_payload']['correct_face'], payload['identification_payload']['wrong_face'])
+            total = no_face+correct_face+wrong_face
+            if total == 0:
+                total = 1
             f2.write(f"Correct Face = "+str(correct_face) + "\nNo Face = "+ str(no_face)+"\nWrong Face = "+str(wrong_face)+"\n\Correct Face "+str(round((correct_face/total)*100,2))+"%"\
             +"\nNo Face "+str(round((no_face/total)*100,2))+"%"+"\nWrong Face "+str(round((wrong_face/totalmovement)*100,2))+"%")
         

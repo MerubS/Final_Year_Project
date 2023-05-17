@@ -19,8 +19,8 @@ const ViewReport = (props) => {
       ];
       const gazedata = [
         { name: 'Left Movement', value: props.data.per_gaze[0], color: '#FFCE56' },
-        { name: 'Right Movement', value: props.data.per_gaze[1], color: '#36A2EB' },
-        { name: 'No Movement', value: props.data.per_gaze[2], color: '#FF6384' }
+        { name: 'No Movement', value: props.data.per_gaze[1], color: '#36A2EB' },
+        { name: 'Right Movement', value: props.data.per_gaze[2], color: '#FF6384' }
       ];
      
       const handleExportToPDF = () => {const chartContainer = chartRef.current;

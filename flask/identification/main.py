@@ -16,7 +16,7 @@ def count_condition(arr, condition):
 
 async def identify(fr , face_encoding , id , identification_payload):
 
-    TOTAL_SNAPSHOTS = identification_payload['total_snapshots']
+    TOTAL_SNAPSHOTS = identification_payload['total_shots']
     NO_FACE = identification_payload['no_face']
     CORRECT_FACE = identification_payload['correct_face']
     WRONG_FACE = identification_payload['wrong_face']
@@ -64,7 +64,7 @@ async def identify(fr , face_encoding , id , identification_payload):
         # return False # when there's no one on the screen.
         NO_FACE = NO_FACE + 1 
         print('b')
-        (identification_payload['total_snapshots'] , identification_payload['no_face'] , identification_payload['correct_face'] , identification_payload['wrong_face']) = (TOTAL_SNAPSHOTS , NO_FACE , CORRECT_FACE , WRONG_FACE)
+        (identification_payload['total_shots'] , identification_payload['no_face'] , identification_payload['correct_face'] , identification_payload['wrong_face']) = (TOTAL_SNAPSHOTS , NO_FACE , CORRECT_FACE , WRONG_FACE)
         return identification_payload
         
     # print((np.array(encodings)[0]) , np.array(encodings))

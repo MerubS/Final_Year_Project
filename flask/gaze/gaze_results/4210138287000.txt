@@ -1,5 +1,5 @@
 Left Movement = 0
-No Movement = 3
+No Movement = 23
 Right Movement = 0
 
 Left Movement 0.0%

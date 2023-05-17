@@ -72,7 +72,7 @@ const Uploadpic = () => {
       let im = webcamRef.current.getScreenshot();
       im = im.substring(23, im.length);
       // SetPicCount(i+1+counter)
-      console.log(im)
+      // console.log(im)
       await sendData(im,i,key)
       await sleep(1000);
    }
@@ -121,6 +121,7 @@ const Uploadpic = () => {
 
    socket.on("ADD_User_Encodings", async(encodings) => {
 
+      console.log("MKC")
       setLoadingState(false);
       console.log("ENCODINGS RECEIVED", candidate.cnic);
       socket.disconnect();

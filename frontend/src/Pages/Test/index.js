@@ -153,7 +153,7 @@ useEffect(()=>{
 		} 
 
     let identification_payload = {
-      'total_snapshots' : 0,
+      'total_shots' : 0,
       'no_face' : 0,
       'correct_face' : 0,
       'wrong_face' : 0
