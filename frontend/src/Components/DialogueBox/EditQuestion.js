@@ -92,16 +92,16 @@ const EditQuestion = (props) => {
           variant="outlined"
           label= "Difficulty"
           sele
-          defaultValue={questiondata.difficulty}
           onChange={onChangeHandler}
           SelectProps={{
             native: true,
           }}
           select 
+          value={questiondata.difficulty}
         >
-            <option> Easy </option>
-            <option> Medium </option>
-            <option> Hard </option>
+             <option value="Easy">Easy</option>
+  <option value="Medium">Medium</option>
+  <option value="Hard">Hard</option>
             </TextField> 
     </Grid>
     <Grid container sx={{padding:'10px'}}>

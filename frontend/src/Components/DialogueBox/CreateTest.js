@@ -7,7 +7,7 @@ import { DataGrid } from '@mui/x-data-grid';
 const Createtest = (props) => {
   const [examiner] = JSON.parse(localStorage.getItem('examiner'))
   const [rows,setrows] = useState([]);
-  const [testdata , settestdata] = useState({examinerid:examiner.examiner_id , name:'' , description: '' , nquestions: 0 , difficulty: '' , timelimit:'' , unit:'' , selectedques:[]});
+  const [testdata , settestdata] = useState({examinerid:examiner.examiner_id , name:'' , description: '' , nquestions: 0 , difficulty: 'Easy' , timelimit:'' , unit:'hr' , selectedques:[]});
   const [errors, seterrors] = useState({nquestions: '' , timelimit:'' });
   const [disable , setdisable] = useState(false);
   const sendmessage = (show , message ) => props.callback( show , message)

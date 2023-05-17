@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const CreateQuestion = (props) => {
   const [examiner] = JSON.parse(localStorage.getItem('examiner'))
-  const [questiondata,setquestiondata] = useState({examinerid:examiner.examiner_id, question:'' , difficulty:'' , answer:'' , option1: '' ,  option2: '',  option3: '',  option4: '' })
+  const [questiondata,setquestiondata] = useState({examinerid:examiner.examiner_id, question:'' , difficulty:'Easy' , answer:'' , option1: '' ,  option2: '',  option3: '',  option4: '' })
   const sendmessage = (show , message ) => props.callback( show , message)
   const onChangeHandler = (event) => {
     setquestiondata(prevState=>({
