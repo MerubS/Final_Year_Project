@@ -35,7 +35,7 @@ const ViewReport = (props) => {
             }
             const tableData = [
               ['Heading', 'Information'],
-              ['Face Recognition', "Unknown: " + props.data.per_face[0] + ", Candidate: " + props.data.per_face[1]],
+              ['Face Recognition', "Correct Face: " + props.data.per_face[0] + "%, No Face: " + props.data.per_face[1] + "%, Wrong Face: " + props.data.per_face[2] + "%" ],
               ['Gaze Detection', 'Left Movement: ' + props.data.per_gaze[0]+ ' ,Right Movement: ' + props.data.per_gaze[1] + ' ,No Movement: ' + props.data.per_gaze[2]],
               ['Objection Detection', concatenatedString],
               ['Tabs Changed' , props.data.tabchange],
