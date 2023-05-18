@@ -46,10 +46,10 @@ const Dashboard = () => {
  return (
    <Grid container spacing={3}>
    <Grid item xs={6}>
-     <OngoingExam callback={editingdata} callbackmessage={showMessage}/>
+     <OngoingExam callback={editingdata} callbackmessage={showMessage}/>           // Work on this
    </Grid>
    <Grid item xs={6}>
-     <Exammanager/>
+     <Exammanager/>                                                                // Work on this
    </Grid>
    <Grid item xs={3}>
    {sbar.sopen && <PositionedSnackbar success={sbar.sstatus} open={sbar.sopen} handleClose={()=>{setsbar({sopen:false , sstatus:''})}}/>}
