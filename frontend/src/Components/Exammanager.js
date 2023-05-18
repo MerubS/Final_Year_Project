@@ -1,5 +1,4 @@
 import { Card , Typography , CardContent , Box , Button , Grid } from "@mui/material";
-import CircularProgress from "@mui/material";
 import axios from 'axios';
 import { useState , useEffect } from "react";
 import { DataGrid , GridOverlay } from '@mui/x-data-grid';
@@ -28,13 +27,7 @@ const Exammanager = () => {
   useEffect(() => {
   getAllTest()
     }, []);
-    function CustomLoadingOverlay() {
-      return (
-        <GridOverlay>
-          <CircularProgress color="primary" size={40} />
-        </GridOverlay>
-      );
-    }
+  
 
 return (
   <Grid container>
@@ -45,10 +38,6 @@ return (
    columns={columns}
    pageSize={10}
    rowsPerPageOptions={[10]}
-   components={{
-    LoadingOverlay: CustomLoadingOverlay
-  }}
-  loading={loading}
    checkboxSelection 
     />
 

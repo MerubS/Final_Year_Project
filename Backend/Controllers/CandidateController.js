@@ -62,8 +62,15 @@ const Getface_encoding = async (req,res)=>{
  
 const CreateCandidate = async (req,res)=>{
     let {registerdata , testdata } = req.body;
-    console.log(registerdata,testdata);
+    console.log("Registerdata" , registerdata, "Testdata",testdata);
     let startdate = new Date();
+    if (testdata.unit === 'min       ') {
+       testdata.timelimit = testdata.timelimit/60000
+    }
+    else if (testdata.unit === 'hr       '){
+      testdata.timelimit = testdata.timelimit/3600000
+    }
+
     let enddate = service.getEndDate( startdate , testdata.timelimit , testdata.unit);
     enddate = new Date(enddate);
    
@@ -79,7 +86,7 @@ const CreateCandidate = async (req,res)=>{
           req.input('bdate',  registerdata.dob)
           req.input('cname',  registerdata.name)
           req.input('cgender', registerdata.gender)
-          req.input('contact' , (registerdata.contact))
+          req.input('contact' , registerdata.contact)
           req.input('ccity', registerdata.city)
           req.input('cemail', registerdata.email)
           req.input('tid', testdata.test_id)
