@@ -1,6 +1,0 @@
-Correct Face = 11
-No Face = 0
-Wrong Face = 0
-\Correct Face 100.0%
-No Face 0.0%
-Wrong Face 0.0%

@@ -39,7 +39,7 @@ if (data.length !== 0) {
   countList= null
   uniqueValues = [...new Set(objectdata)].filter((o) => o !==  ' ');
   onlyEmptyStrings = uniqueValues.every(item => item === '');
- if (onlyEmptyStrings == false) {
+ if (onlyEmptyStrings === false) {
   countList = uniqueValues.reduce((count, value) => {
   const occurrences = objectdata.filter(item => item === value).length;
   count.push({ name: value, value: occurrences });
