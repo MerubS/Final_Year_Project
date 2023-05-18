@@ -70,7 +70,7 @@ const CreateCandidate = async (req,res)=>{
     else if (testdata.unit === 'hr       '){
       testdata.timelimit = testdata.timelimit/3600000
     }
-
+    console.log(testdata)
     let enddate = service.getEndDate( startdate , testdata.timelimit , testdata.unit);
     enddate = new Date(enddate);
    
